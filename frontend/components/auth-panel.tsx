@@ -106,9 +106,6 @@ export function AuthPanel({
             : "Sign in"}
       </button>
 
-      <p className="text-xs leading-5 text-slate-500">
-        Demo mode: run `make seed-demo`, then sign in with `demo@virtualcloset.dev` / `demo12345`.
-      </p>
 
       {authError ? <p className="text-sm text-red-600">{authError}</p> : null}
     </form>
