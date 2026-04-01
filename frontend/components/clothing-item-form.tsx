@@ -232,7 +232,6 @@ export function ClothingItemForm({
               className="block w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 file:mr-4 file:rounded-full file:border-0 file:bg-ink file:px-4 file:py-2 file:text-sm file:font-medium file:text-white"
               type="file"
               accept="image/*"
-              capture="environment"
               disabled={disabled || isSubmitting}
               onChange={(event) => {
                 const file = event.target.files?.[0] ?? null;
