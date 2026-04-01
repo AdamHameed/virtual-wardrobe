@@ -17,21 +17,23 @@ branch_labels = None
 depends_on = None
 
 
-clothing_status_enum = sa.Enum(
+clothing_status_enum = postgresql.ENUM(
     "clean",
     "dirty",
     "unavailable",
     name="clothing_status_enum",
+    create_type=False,
 )
-season_enum = sa.Enum(
+season_enum = postgresql.ENUM(
     "spring",
     "summer",
     "fall",
     "winter",
     "all_season",
     name="season_enum",
+    create_type=False,
 )
-formality_enum = sa.Enum(
+formality_enum = postgresql.ENUM(
     "casual",
     "smart_casual",
     "business",
@@ -39,8 +41,9 @@ formality_enum = sa.Enum(
     "athletic",
     "lounge",
     name="formality_enum",
+    create_type=False,
 )
-outfit_item_role_enum = sa.Enum(
+outfit_item_role_enum = postgresql.ENUM(
     "top",
     "bottom",
     "shoes",
@@ -48,12 +51,14 @@ outfit_item_role_enum = sa.Enum(
     "accessory",
     "one_piece",
     name="outfit_item_role_enum",
+    create_type=False,
 )
-clothing_tag_source_enum = sa.Enum(
+clothing_tag_source_enum = postgresql.ENUM(
     "manual",
     "generated",
     "system",
     name="clothing_tag_source_enum",
+    create_type=False,
 )
 
 

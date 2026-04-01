@@ -17,13 +17,13 @@ class OutfitService:
         self.repository = OutfitRepository(db)
         self.clothing_item_repository = ClothingItemRepository(db)
 
-    def list_outfits(self, *, current_user: User, pagination: PaginationParams) -> PaginatedResponse[Outfit]:
+    def list_outfits(self, *, current_user: User, pagination: PaginationParams) -> PaginatedResponse:
         items, total = self.repository.list_outfits(
             user_id=current_user.id,
             limit=pagination.limit,
             offset=pagination.offset,
         )
-        return PaginatedResponse[Outfit](
+        return PaginatedResponse(
             items=items,
             total=total,
             limit=pagination.limit,
@@ -93,4 +93,3 @@ class OutfitService:
             )
             for item in items
         ]
-

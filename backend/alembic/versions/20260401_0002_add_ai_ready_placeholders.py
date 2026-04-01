@@ -17,17 +17,19 @@ branch_labels = None
 depends_on = None
 
 
-provenance_source_enum = sa.Enum(
+provenance_source_enum = postgresql.ENUM(
     "manual",
     "rule_based",
     "ai_generated",
     name="provenance_source_enum",
+    create_type=False,
 )
-suggestion_status_enum = sa.Enum(
+suggestion_status_enum = postgresql.ENUM(
     "pending",
     "accepted",
     "rejected",
     name="suggestion_status_enum",
+    create_type=False,
 )
 
 

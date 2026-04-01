@@ -3,12 +3,12 @@ from collections.abc import Generator
 from typing import Annotated
 
 from fastapi import Query
+from app.core.enums import ClothingStatus, Formality, Season
 from sqlalchemy.orm import Session
 
 from app.db.session import SessionLocal
 from app.schemas.clothing_item import ClothingItemFilterParams
 from app.schemas.common import PaginationParams
-from app.core.enums import ClothingStatus, Formality, Season
 
 
 def get_db() -> Generator[Session, None, None]:
@@ -28,6 +28,7 @@ def get_pagination_params(
 
 
 def get_clothing_item_filters(
+    query: str | None = Query(default=None, alias="q"),
     category: str | None = Query(default=None),
     color: str | None = Query(default=None),
     season: Season | None = Query(default=None),
@@ -35,6 +36,7 @@ def get_clothing_item_filters(
     status_value: ClothingStatus | None = Query(default=None, alias="status"),
 ) -> ClothingItemFilterParams:
     return ClothingItemFilterParams(
+        query=query,
         category=category,
         color=color,
         season=season,

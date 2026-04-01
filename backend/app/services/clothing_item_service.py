@@ -24,9 +24,10 @@ class ClothingItemService:
         current_user: User,
         filters: ClothingItemFilterParams,
         pagination: PaginationParams,
-    ) -> PaginatedResponse[ClothingItem]:
+    ) -> PaginatedResponse:
         items, total = self.repository.list_items(
             user_id=current_user.id,
+            query=filters.query,
             category=filters.category,
             color=filters.color,
             season=filters.season.value if filters.season else None,
@@ -35,7 +36,7 @@ class ClothingItemService:
             limit=pagination.limit,
             offset=pagination.offset,
         )
-        return PaginatedResponse[ClothingItem](
+        return PaginatedResponse(
             items=items,
             total=total,
             limit=pagination.limit,
@@ -98,4 +99,3 @@ class ClothingItemService:
     def delete_item(self, *, current_user: User, item_id: int) -> None:
         item = self.get_item(current_user=current_user, item_id=item_id)
         self.repository.delete(item)
-

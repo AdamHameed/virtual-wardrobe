@@ -3,6 +3,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.enums import ClothingTagSource
 from app.db.base import Base
+from app.db.enum_utils import enum_values
 from app.models.mixins import ExtraDataMixin, TimestampMixin
 
 
@@ -17,7 +18,7 @@ class ClothingTag(TimestampMixin, ExtraDataMixin, Base):
     name: Mapped[str] = mapped_column(String(100), nullable=False)
     description: Mapped[str | None] = mapped_column(Text, nullable=True)
     source: Mapped[ClothingTagSource] = mapped_column(
-        Enum(ClothingTagSource, name="clothing_tag_source_enum"),
+        Enum(ClothingTagSource, name="clothing_tag_source_enum", values_callable=enum_values),
         default=ClothingTagSource.MANUAL,
         nullable=False,
     )
@@ -27,4 +28,3 @@ class ClothingTag(TimestampMixin, ExtraDataMixin, Base):
         back_populates="tag",
         cascade="all, delete-orphan",
     )
-

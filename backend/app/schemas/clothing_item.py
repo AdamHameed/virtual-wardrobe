@@ -46,6 +46,7 @@ class ClothingItemUpdate(BaseModel):
 
 
 class ClothingItemFilterParams(BaseModel):
+    query: str | None = None
     category: str | None = None
     color: str | None = None
     season: Season | None = None

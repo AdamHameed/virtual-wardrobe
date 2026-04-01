@@ -5,6 +5,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.enums import ClothingStatus, Formality, Season
 from app.db.base import Base
+from app.db.enum_utils import enum_values
 from app.models.mixins import ExtraDataMixin, TimestampMixin
 from app.utils.media import build_media_url
 
@@ -20,11 +21,11 @@ class ClothingItem(TimestampMixin, ExtraDataMixin, Base):
     primary_color: Mapped[str | None] = mapped_column(String(100), nullable=True)
     secondary_color: Mapped[str | None] = mapped_column(String(100), nullable=True)
     season: Mapped[Season | None] = mapped_column(
-        Enum(Season, name="season_enum"),
+        Enum(Season, name="season_enum", values_callable=enum_values),
         nullable=True,
     )
     formality: Mapped[Formality | None] = mapped_column(
-        Enum(Formality, name="formality_enum"),
+        Enum(Formality, name="formality_enum", values_callable=enum_values),
         nullable=True,
     )
     material: Mapped[str | None] = mapped_column(String(100), nullable=True)
@@ -32,7 +33,7 @@ class ClothingItem(TimestampMixin, ExtraDataMixin, Base):
     notes: Mapped[str | None] = mapped_column(Text, nullable=True)
     image_path: Mapped[str | None] = mapped_column(String(500), nullable=True)
     status: Mapped[ClothingStatus] = mapped_column(
-        Enum(ClothingStatus, name="clothing_status_enum"),
+        Enum(ClothingStatus, name="clothing_status_enum", values_callable=enum_values),
         default=ClothingStatus.CLEAN,
         nullable=False,
     )
@@ -49,4 +50,3 @@ class ClothingItem(TimestampMixin, ExtraDataMixin, Base):
     @property
     def image_url(self) -> str | None:
         return build_media_url(self.image_path)
-

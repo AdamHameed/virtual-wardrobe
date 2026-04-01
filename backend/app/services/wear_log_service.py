@@ -18,13 +18,13 @@ class WearLogService:
         self.outfit_repository = OutfitRepository(db)
         self.clothing_item_repository = ClothingItemRepository(db)
 
-    def list_logs(self, *, current_user: User, pagination: PaginationParams) -> PaginatedResponse[WearLog]:
+    def list_logs(self, *, current_user: User, pagination: PaginationParams) -> PaginatedResponse:
         items, total = self.repository.list_logs(
             user_id=current_user.id,
             limit=pagination.limit,
             offset=pagination.offset,
         )
-        return PaginatedResponse[WearLog](
+        return PaginatedResponse(
             items=items,
             total=total,
             limit=pagination.limit,
@@ -74,4 +74,3 @@ class WearLogService:
             clothing_item.wear_count += 1
             clothing_item.last_worn_at = worn_at
             self.clothing_item_repository.update(clothing_item)
-

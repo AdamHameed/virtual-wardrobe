@@ -12,13 +12,13 @@ class ClothingTagService:
     def __init__(self, db: Session) -> None:
         self.repository = ClothingTagRepository(db)
 
-    def list_tags(self, *, current_user: User, pagination: PaginationParams) -> PaginatedResponse[ClothingTag]:
+    def list_tags(self, *, current_user: User, pagination: PaginationParams) -> PaginatedResponse:
         items, total = self.repository.list_tags(
             user_id=current_user.id,
             limit=pagination.limit,
             offset=pagination.offset,
         )
-        return PaginatedResponse[ClothingTag](
+        return PaginatedResponse(
             items=items,
             total=total,
             limit=pagination.limit,
@@ -50,4 +50,3 @@ class ClothingTagService:
     def delete_tag(self, *, current_user: User, tag_id: int) -> None:
         tag = self.get_tag(current_user=current_user, tag_id=tag_id)
         self.repository.delete(tag)
-

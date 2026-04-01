@@ -1,4 +1,4 @@
-from sqlalchemy import or_, select
+from sqlalchemy import func, or_, select
 from sqlalchemy.orm import Session
 
 from app.core.enums import ClothingStatus
@@ -13,6 +13,7 @@ class ClothingItemRepository:
         self,
         *,
         user_id: int,
+        query: str | None = None,
         category: str | None = None,
         color: str | None = None,
         season: str | None = None,
@@ -22,7 +23,23 @@ class ClothingItemRepository:
         offset: int = 0,
     ) -> tuple[list[ClothingItem], int]:
         statement = select(ClothingItem).where(ClothingItem.user_id == user_id)
-        count_statement = select(ClothingItem).where(ClothingItem.user_id == user_id)
+        count_statement = select(func.count()).select_from(ClothingItem).where(
+            ClothingItem.user_id == user_id,
+        )
+
+        if query:
+            search_term = f"%{query.strip()}%"
+            search_clause = or_(
+                ClothingItem.name.ilike(search_term),
+                ClothingItem.category.ilike(search_term),
+                ClothingItem.subcategory.ilike(search_term),
+                ClothingItem.brand.ilike(search_term),
+                ClothingItem.primary_color.ilike(search_term),
+                ClothingItem.secondary_color.ilike(search_term),
+                ClothingItem.notes.ilike(search_term),
+            )
+            statement = statement.where(search_clause)
+            count_statement = count_statement.where(search_clause)
 
         if category:
             statement = statement.where(ClothingItem.category == category)
@@ -46,7 +63,7 @@ class ClothingItemRepository:
 
         statement = statement.order_by(ClothingItem.created_at.desc()).limit(limit).offset(offset)
         items = list(self.db.scalars(statement).all())
-        total = len(self.db.scalars(count_statement).all())
+        total = self.db.scalar(count_statement) or 0
         return items, total
 
     def get_by_id(self, *, user_id: int, item_id: int) -> ClothingItem | None:
@@ -78,6 +95,8 @@ class ClothingItemRepository:
         return item
 
     def delete(self, item: ClothingItem) -> None:
+        for outfit_item in list(item.outfit_items):
+            self.db.delete(outfit_item)
         self.db.delete(item)
         self.db.commit()
 

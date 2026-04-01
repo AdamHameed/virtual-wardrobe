@@ -3,6 +3,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.enums import ProvenanceSource
 from app.db.base import Base
+from app.db.enum_utils import enum_values
 from app.models.mixins import ExtraDataMixin, TimestampMixin
 
 
@@ -13,7 +14,7 @@ class AIRecommendationLog(TimestampMixin, ExtraDataMixin, Base):
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), index=True)
     request_type: Mapped[str] = mapped_column(String(100), nullable=False)
     source: Mapped[ProvenanceSource] = mapped_column(
-        Enum(ProvenanceSource, name="provenance_source_enum"),
+        Enum(ProvenanceSource, name="provenance_source_enum", values_callable=enum_values),
         default=ProvenanceSource.RULE_BASED,
         nullable=False,
     )

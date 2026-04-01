@@ -14,13 +14,13 @@ class OutfitPlanService:
         self.repository = OutfitPlanRepository(db)
         self.outfit_repository = OutfitRepository(db)
 
-    def list_plans(self, *, current_user: User, pagination: PaginationParams) -> PaginatedResponse[OutfitPlan]:
+    def list_plans(self, *, current_user: User, pagination: PaginationParams) -> PaginatedResponse:
         items, total = self.repository.list_plans(
             user_id=current_user.id,
             limit=pagination.limit,
             offset=pagination.offset,
         )
-        return PaginatedResponse[OutfitPlan](
+        return PaginatedResponse(
             items=items,
             total=total,
             limit=pagination.limit,
@@ -60,4 +60,3 @@ class OutfitPlanService:
     def _ensure_outfit_owned(self, *, current_user: User, outfit_id: int) -> None:
         if self.outfit_repository.get_by_id(user_id=current_user.id, outfit_id=outfit_id) is None:
             raise bad_request("Outfit does not belong to the authenticated user.")
-
