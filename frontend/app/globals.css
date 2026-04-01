@@ -1,0 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  @apply min-h-screen bg-sand text-ink antialiased;
+  background-image:
+    radial-gradient(circle at top left, rgba(180, 83, 9, 0.15), transparent 30%),
+    radial-gradient(circle at bottom right, rgba(54, 83, 20, 0.15), transparent 25%);
+}
+
+input,
+select,
+textarea {
+  @apply outline-none;
+}
+

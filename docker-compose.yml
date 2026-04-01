@@ -1,0 +1,48 @@
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: virtual-closet-frontend
+    environment:
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:8000/api/v1}
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: virtual-closet-backend
+    environment:
+      VC_DATABASE_URL: ${VC_DATABASE_URL:-postgresql+psycopg://postgres:postgres@db:5432/virtual_closet}
+      VC_CORS_ORIGINS: ${VC_CORS_ORIGINS:-http://localhost:3000}
+      VC_MEDIA_ROOT: ${VC_MEDIA_ROOT:-/app/media}
+      VC_MEDIA_URL: ${VC_MEDIA_URL:-/media}
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+      - ./backend/media:/app/media
+    depends_on:
+      - db
+
+  db:
+    image: postgres:16-alpine
+    container_name: virtual-closet-db
+    environment:
+      POSTGRES_DB: virtual_closet
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:

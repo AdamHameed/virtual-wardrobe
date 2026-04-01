@@ -1,0 +1,26 @@
+from datetime import datetime, timedelta, timezone
+from typing import Any
+
+from jose import JWTError, jwt
+
+from app.core.config import settings
+
+
+def create_access_token(subject: str, expires_delta: timedelta | None = None) -> str:
+    expire = datetime.now(timezone.utc) + (
+        expires_delta or timedelta(minutes=settings.access_token_expire_minutes)
+    )
+    payload: dict[str, Any] = {
+        "sub": subject,
+        "exp": expire,
+    }
+    return jwt.encode(payload, settings.secret_key, algorithm=settings.jwt_algorithm)
+
+
+def decode_token(token: str) -> dict[str, Any]:
+    return jwt.decode(token, settings.secret_key, algorithms=[settings.jwt_algorithm])
+
+
+def is_token_error(error: Exception) -> bool:
+    return isinstance(error, JWTError)
+
